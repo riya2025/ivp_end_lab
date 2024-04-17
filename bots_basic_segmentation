@@ -1,0 +1,35 @@
+water shed -contrast enhancement
+clahe,scaleabs-contrast enhancement
+grapbcut-segmentation 
+
+
+
+def enhance_contrast(img):
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+    cl = clahe.apply(l)
+    enhanced_lab = cv2.merge((cl, a, b))
+    enhanced_img = cv2.cvtColor(enhanced_lab, cv2.COLOR_LAB2BGR)
+    return enhanced_img 
+    
+    
+  def segment_image(img):
+    mask = np.zeros(img.shape[:2], np.uint8)
+    bgd_model = np.zeros((1, 65), np.float64)
+    fgd_model = np.zeros((1, 65), np.float64)
+    rect = (50, 50, img.shape[1]-50, img.shape[0]-50)
+    cv2.grabCut(img, mask, rect, bgd_model, fgd_model, 5, cv2.GC_INIT_WITH_RECT)
+    mask2 = np.where((mask == 2) | (mask == 0), 0, 1).astype('uint8')
+    segmented_img = img * mask2[:, :, np.newaxis]
+    return segmented_img  
+    
+  enhanced_image = enhance_contrast(img)
+segmented_image = segment_image(enhanced_image)  
+    
+    
+  
+  perplexity , mistrall , black box ,claude-chatbots
+    
+    
+    
